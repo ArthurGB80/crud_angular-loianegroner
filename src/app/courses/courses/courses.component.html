@@ -6,6 +6,12 @@
     <table mat-table [dataSource]="courses" class="mat-elevation-z8">
 
       <!-- Position Column -->
+      <ng-container matColumnDef="_id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let course">{{ course.id }}</td>
+      </ng-container>
+
+      <!-- Position Column -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Curso</th>
         <td mat-cell *matCellDef="let course">{{ course.name }}</td>
@@ -14,7 +20,9 @@
       <!-- Name Column -->
       <ng-container matColumnDef="category">
         <th mat-header-cell *matHeaderCellDef>Categoria</th>
-        <td mat-cell *matCellDef="let course">{{ course.category }}</td>
+        <td mat-cell *matCellDef="let course">{{ course.category }}
+          <mat-icon aria-hidden="false" aria-label="Categoria do Curso"> {{ course.category | category }}</mat-icon>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

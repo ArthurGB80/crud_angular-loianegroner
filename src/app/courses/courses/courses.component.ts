@@ -16,7 +16,7 @@ import { CoursesService } from '../services/courses.service';
 })
 export class CoursesComponent implements OnInit {
   courses$: Observable<Course[]>;
-  displayedColumns = ['name', 'category'];
+  displayedColumns = ['_id', 'name', 'category'];
 
   // coursesService: CoursesService
 
@@ -26,10 +26,11 @@ export class CoursesComponent implements OnInit {
     ) {
     // this.courses = [];
     //this.coursesService = new CoursesService();
-    
+
     this.courses$ = this.coursesService.list();
     pipe(
       catchError((error) => {
+        console.log(error);
         this.onError('Erro ao carregar cursos.')
         return of([]);
       })
