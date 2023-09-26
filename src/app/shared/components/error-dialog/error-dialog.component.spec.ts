@@ -8,7 +8,7 @@ describe('ErrorDialogComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ErrorDialogComponent]
+      declarations: [ErrorDialogComponent],
     });
     fixture = TestBed.createComponent(ErrorDialogComponent);
     component = fixture.componentInstance;
