@@ -7,6 +7,7 @@ import { SharedModule } from '../shared/shared.module';
 import { CourseFormComponent } from './course-form/course-form.component';
 import { CoursesRoutingModule } from './courses-routing.module';
 import { CoursesComponent } from './courses/courses.component';
+import { CoursesService } from './services/courses.service';
 
 @NgModule({
   declarations: [CoursesComponent, CourseFormComponent],
@@ -17,5 +18,6 @@ import { CoursesComponent } from './courses/courses.component';
     SharedModule,
     ReactiveFormsModule,
   ],
+  providers: [CoursesService],
 })
 export class CoursesModule {}
