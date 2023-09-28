@@ -29,8 +29,8 @@
       <!-- Actions Column -->
       <ng-container matColumnDef="actions">
         <mat-header-cell *matHeaderCellDef>
-          <button mat-mini-fab color="primary" aria-label="Adicionar um curso">
-            <mat-icon (click)="onAdd()">add</mat-icon>
+          <button mat-mini-fab color="primary" aria-label="Adicionar um curso" (click)="onAdd()">
+            <mat-icon>add</mat-icon>
           </button>
         </mat-header-cell>
         <mat-cell *matCellDef="let course">
@@ -51,7 +51,7 @@
 
   <ng-template #loading>
     <div class="loading-spinner">
-      <mat-spinner></mat-spinner>
+      <mat-spinner>"Loading..."</mat-spinner>
     </div>
   </ng-template>
 

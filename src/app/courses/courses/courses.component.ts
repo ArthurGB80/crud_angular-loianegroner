@@ -48,7 +48,7 @@ export class CoursesComponent implements OnInit {
   ngOnInit(): void {}
 
   onAdd() {
-    console.log('onAdd');
-    //this.router.navigate(['new'], { relativeTo: this.route });
+    // console.log('onAdd');
+    this.router.navigate(['/courses/new'], { relativeTo: this.route });
   }
 }
