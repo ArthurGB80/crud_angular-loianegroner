@@ -9,6 +9,7 @@ import { CourseFormComponent } from './course-form/course-form.component';
 import { CoursesRoutingModule } from './courses-routing.module';
 import { CoursesComponent } from './courses/courses.component';
 import { CoursesService } from './services/courses.service';
+import { CourseListComponent } from './course-list/course-list.component';
 
 const routes: Routes = [
   { path: 'courses', component: CoursesComponent },
@@ -16,7 +17,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CoursesComponent, CourseFormComponent],
+  declarations: [CoursesComponent, CourseFormComponent, CourseListComponent],
   imports: [
     CommonModule,
     CoursesRoutingModule,
