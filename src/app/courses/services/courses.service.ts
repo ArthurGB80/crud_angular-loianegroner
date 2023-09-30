@@ -6,6 +6,7 @@ import { Course } from '../model/course';
 
 @Injectable()
 export class CoursesService {
+  [x: string]: any;
   private readonly API = 'api/courses';
 
   constructor(private httpClient: HttpClient) {}
@@ -16,6 +17,10 @@ export class CoursesService {
       // delay(5000),
       tap((courses) => console.log(courses))
     );
+  }
+
+  loadById(id: string){
+    return this.httpClient.get<Course>('${this.API}/${id}');
   }
 
   save(record: Partial<Course>) {

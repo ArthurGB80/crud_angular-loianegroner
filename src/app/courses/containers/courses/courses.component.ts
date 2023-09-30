@@ -5,8 +5,8 @@ import { Observable } from 'rxjs/internal/Observable';
 import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/error-dialog.component';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { Course } from '../model/course';
-import { CoursesService } from '../services/courses.service';
+import { Course } from '../../model/course';
+import { CoursesService } from '../../services/courses.service';
 
 @Component({
   selector: 'app-courses',
@@ -30,6 +30,7 @@ export class CoursesComponent implements OnInit {
 
     this.courses$ = this.coursesService.list();
     pipe(
+      //tap((courses) => {}),
       catchError((error) => {
         console.log(error);
         this.onError('Erro ao carregar cursos.');
@@ -47,7 +48,13 @@ export class CoursesComponent implements OnInit {
   ngOnInit(): void {}
 
   onAdd() {
-    // console.log('onAdd');
-    this.router.navigate(['/courses/new'], { relativeTo: this.route });
+    console.log('onAdd');
+    this.router.navigate(['new'], { relativeTo: this.route });
   }
+
+  onEdit(course: Course) {
+    this.router.navigate(['edit', course._id], { relativeTo: this.route });
+
+  }
+
 }

@@ -5,11 +5,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { AppMaterialModule } from '../shared/app-material/app-material.module';
 import { SharedModule } from '../shared/shared.module';
-import { CourseFormComponent } from './course-form/course-form.component';
+import { CourseListComponent } from './components/course-list/course-list.component';
+import { CourseFormComponent } from './containers/course-form/course-form.component';
+import { CoursesComponent } from './containers/courses/courses.component';
 import { CoursesRoutingModule } from './courses-routing.module';
-import { CoursesComponent } from './courses/courses.component';
 import { CoursesService } from './services/courses.service';
-import { CourseListComponent } from './course-list/course-list.component';
 
 const routes: Routes = [
   { path: 'courses', component: CoursesComponent },
