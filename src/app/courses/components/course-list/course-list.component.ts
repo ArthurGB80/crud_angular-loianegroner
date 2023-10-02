@@ -26,7 +26,6 @@ export class CourseListComponent {
 
   onEdit(course: Course) {
     this.add.emit(course);
-
   }
 
 }

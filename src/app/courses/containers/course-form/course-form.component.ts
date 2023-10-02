@@ -13,7 +13,6 @@ import { CoursesService } from '../../services/courses.service';
 })
 export class CourseFormComponent implements OnInit {
   form = this.formBuilder.group({
-    //_id: [''],
     name: [''],
     category: [''],
   });
@@ -22,10 +21,9 @@ export class CourseFormComponent implements OnInit {
     private formBuilder: NonNullableFormBuilder,
     private service: CoursesService,
     private _snackBar: MatSnackBar,
-    private location: Location
-  ) {
-    //this.form
-  }
+    private location: Location) {
+      // this.form
+    }
 
   ngOnInit(): void {}
 
