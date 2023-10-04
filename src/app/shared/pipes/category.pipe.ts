@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'category',
 })
 export class CategoryPipe implements PipeTransform {
-  transform(value: string, ...args: unknown[]): string {
+  transform(value: string): string {
     switch (value) {
       case 'front-end':
         return 'code';
