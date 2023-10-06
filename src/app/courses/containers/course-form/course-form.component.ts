@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { NonNullableFormBuilder } from '@angular/forms';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Course } from '../../model/course'; // Import the Course type
 
@@ -13,37 +13,42 @@ import { CoursesService } from '../../services/courses.service';
   styleUrls: ['./course-form.component.scss'],
 })
 export class CourseFormComponent implements OnInit {
-
   form = this.formBuilder.group({
     _id: [''],
-    name: [''],
-    category: [''],
-  })
+    name: [
+      '',
+      [Validators.required, Validators.minLength(5), Validators.maxLength(100)],
+    ],
+    category: ['', [Validators.required]],
+  });
 
   constructor(
     private formBuilder: NonNullableFormBuilder,
-    private service: CoursesService,
+    private coursesService: CoursesService, // Update the property name here
     private snackBar: MatSnackBar,
     private location: Location,
-    private route: ActivatedRoute) {
-      // this.form
-    }
+    private route: ActivatedRoute
+  ) {
+    // this.form
+  }
 
   ngOnInit(): void {
-    const course : Course = this.route.snapshot.data['course'];
+    const course: Course = this.route.snapshot.data['course'];
     this.form.setValue({
       _id: course._id,
       name: course.name,
-      category: course.category
-    })
+      category: course.category,
+    });
     //console.log(course);
   }
 
   onSubmit() {
-    this.service.save(this.form.value as Course).subscribe(
-      (result) => this.onSuccess(),
-      (error) => this.onError() // Chama a função onError
-    );
+    this.coursesService.save(this.form.value).subscribe({
+      next: (data) => console.log(data),
+      error: () => {
+        this.onError();
+      },
+    });
   }
 
   onCancel() {
@@ -57,5 +62,21 @@ export class CourseFormComponent implements OnInit {
 
   private onError() {
     this.snackBar.open('Erro ao salvar curso!', '', { duration: 5000 });
+  }
+
+  getErrorMessage(fieldName: string) {
+    const field = this.form.get(fieldName);
+
+    if (field?.hasError('required')) {
+      const requiredLength = field.errors ? field.errors['ninlength']['requiredLength'] : 5
+      return 'Tamanho mínimo precisa ser ${requiredLength} caracteres.';
+    }
+
+
+    if (field?.hasError('required')) {
+      const requiredLength = field.errors ? field.errors['ninlength']['requiredLength'] : 5
+      return 'Tamanho máximo excedido de ${requiredLength} caracteres.';
+    }
+    return 'Campo Inválido';
   }
 }
