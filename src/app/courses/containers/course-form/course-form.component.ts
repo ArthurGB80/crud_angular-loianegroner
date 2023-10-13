@@ -1,54 +1,86 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { FormGroup, NonNullableFormBuilder, UntypedFormArray, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Course } from '../../model/course'; // Import the Course type
-
 import { ActivatedRoute } from '@angular/router';
+
+import { Course } from '../../model/course';
 import { CoursesService } from '../../services/courses.service';
+import { FormUtilsService } from './../../../shared/form/form-utils.service';
+import { Lesson } from './../../model/lesson';
 
 @Component({
   selector: 'app-course-form',
   templateUrl: './course-form.component.html',
-  styleUrls: ['./course-form.component.scss'],
+  styleUrls: ['./course-form.component.scss']
 })
 export class CourseFormComponent implements OnInit {
-  form = this.formBuilder.group({
-    _id: [''],
-    name: [
-      '',
-      [Validators.required, Validators.minLength(5), Validators.maxLength(100)],
-    ],
-    category: ['', [Validators.required]],
-  });
 
-  constructor(
-    private formBuilder: NonNullableFormBuilder,
-    private coursesService: CoursesService, // Update the property name here
+  form!: FormGroup;
+
+  constructor(private formBuilder: NonNullableFormBuilder,
+    private service: CoursesService,
     private snackBar: MatSnackBar,
     private location: Location,
-    private route: ActivatedRoute
-  ) {
-    // this.form
+    private route: ActivatedRoute,
+    public formUtils: FormUtilsService) {
   }
 
   ngOnInit(): void {
     const course: Course = this.route.snapshot.data['course'];
-    this.form.setValue({
-      _id: course._id,
-      name: course.name,
-      category: course.category,
+    this.form = this.formBuilder.group({
+      _id: [course._id],
+      name: [course.name, [Validators.required,
+      Validators.minLength(5),
+      Validators.maxLength(100)]],
+      category: [course.category, [Validators.required]],
+      lessons: this.formBuilder.array(this.retrieveLessons(course), Validators.required)
     });
-    //console.log(course);
+  }
+
+  private retrieveLessons(course: Course) {
+    const lessons = [];
+    if (course?.lessons) {
+      course.lessons.forEach(lesson => lessons.push(this.createLesson(lesson)));
+    } else {
+      lessons.push(this.createLesson());
+    }
+    return lessons;
+  }
+
+  private createLesson(lesson: Lesson = { id: '', name: '', youtubeUrl: '' }) {
+    return this.formBuilder.group({
+      id: [lesson.id],
+      name: [lesson.name, [Validators.required,
+      Validators.minLength(5),
+      Validators.maxLength(100)]],
+      youtubeUrl: [lesson.youtubeUrl, [Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(11)]]
+    });
+  }
+
+  getLessonsFormArray() {
+    return (<UntypedFormArray>this.form.get('lessons')).controls;
+  }
+
+  addNewLesson() {
+    const lessons = this.form.get('lessons') as UntypedFormArray;
+    lessons.push(this.createLesson());
+  }
+
+  removeLesson(index: number) {
+    const lessons = this.form.get('lessons') as UntypedFormArray;
+    lessons.removeAt(index);
   }
 
   onSubmit() {
-    this.coursesService.save(this.form.value).subscribe({
-      next: (data) => console.log(data),
-      error: () => {
-        this.onError();
-      },
-    });
+    if (this.form.valid) {
+      this.service.save(this.form.value)
+        .subscribe(result => this.onSuccess(), error => this.onError());
+    } else {
+      this.formUtils.validateAllFormFields(this.form);
+    }
   }
 
   onCancel() {
@@ -61,26 +93,6 @@ export class CourseFormComponent implements OnInit {
   }
 
   private onError() {
-    this.snackBar.open('Erro ao salvar curso!', '', { duration: 5000 });
-  }
-
-  getErrorMessage(fieldName: string) {
-    const field = this.form.get(fieldName);
-
-    if (field?.hasError('required')) {
-      return 'Campo obrigatório.';
-    }
-
-    if (field?.hasError('minlength')) {
-      const requiredLength = field.errors ? field.errors['minlength']['requiredLength'] : 5
-      return `Tamanho mínimo precisa ser ${requiredLength} caracteres.`;
-    }
-
-
-    if (field?.hasError('maxlength')) {
-      const requiredLength = field.errors ? field.errors['maxlength']['requiredLength'] : 200
-      return `Tamanho máximo excedido de ${requiredLength} caracteres.`;
-    }
-    return 'Campo Inválido';
+    this.snackBar.open('Erro ao salvar curso.', '', { duration: 5000 });
   }
 }
