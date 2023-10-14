@@ -1,6 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, NonNullableFormBuilder, UntypedFormArray, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  NonNullableFormBuilder,
+  UntypedFormArray,
+  Validators,
+} from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 
@@ -12,36 +17,47 @@ import { Lesson } from './../../model/lesson';
 @Component({
   selector: 'app-course-form',
   templateUrl: './course-form.component.html',
-  styleUrls: ['./course-form.component.scss']
+  styleUrls: ['./course-form.component.scss'],
 })
 export class CourseFormComponent implements OnInit {
-
   form!: FormGroup;
 
-  constructor(private formBuilder: NonNullableFormBuilder,
+  constructor(
+    private formBuilder: NonNullableFormBuilder,
     private service: CoursesService,
     private snackBar: MatSnackBar,
     private location: Location,
     private route: ActivatedRoute,
-    public formUtils: FormUtilsService) {
-  }
+    public formUtils: FormUtilsService
+  ) {}
 
   ngOnInit(): void {
     const course: Course = this.route.snapshot.data['course'];
+
     this.form = this.formBuilder.group({
       _id: [course._id],
-      name: [course.name, [Validators.required,
-      Validators.minLength(5),
-      Validators.maxLength(100)]],
+      name: [
+        course.name,
+        [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(100),
+        ],
+      ],
       category: [course.category, [Validators.required]],
-      lessons: this.formBuilder.array(this.retrieveLessons(course), Validators.required)
+      lessons: this.formBuilder.array(
+        this.retrieveLessons(course),
+        Validators.required
+      ),
     });
   }
 
   private retrieveLessons(course: Course) {
     const lessons = [];
     if (course?.lessons) {
-      course.lessons.forEach(lesson => lessons.push(this.createLesson(lesson)));
+      course.lessons.forEach((lesson) =>
+        lessons.push(this.createLesson(lesson))
+      );
     } else {
       lessons.push(this.createLesson());
     }
@@ -51,12 +67,22 @@ export class CourseFormComponent implements OnInit {
   private createLesson(lesson: Lesson = { id: '', name: '', youtubeUrl: '' }) {
     return this.formBuilder.group({
       id: [lesson.id],
-      name: [lesson.name, [Validators.required,
-      Validators.minLength(5),
-      Validators.maxLength(100)]],
-      youtubeUrl: [lesson.youtubeUrl, [Validators.required,
-      Validators.minLength(10),
-      Validators.maxLength(11)]]
+      name: [
+        lesson.name,
+        [
+          Validators.required,
+          Validators.minLength(5),
+          Validators.maxLength(100),
+        ],
+      ],
+      youtubeUrl: [
+        lesson.youtubeUrl,
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(11),
+        ],
+      ],
     });
   }
 
@@ -76,8 +102,10 @@ export class CourseFormComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      this.service.save(this.form.value)
-        .subscribe(result => this.onSuccess(), error => this.onError());
+      this.service.save(this.form.value).subscribe(
+        (result) => this.onSuccess(),
+        (error) => this.onError()
+      );
     } else {
       this.formUtils.validateAllFormFields(this.form);
     }
@@ -95,4 +123,9 @@ export class CourseFormComponent implements OnInit {
   private onError() {
     this.snackBar.open('Erro ao salvar curso.', '', { duration: 5000 });
   }
+
+
+  // verificar aula 52 - Campos faltantes no codigo fonte
+
+  // Loiane, reparei que no código fonte do github no arquivo "course-form.componet.ts" esta faltando a parte final. Tem trechos que estão presente nessa aula, mas não na parte final do arquivo. Não sei se esse arquivo vai mudar nas próximas aulas, mas até esse ponto a parte final esta faltando no código fonte. 
 }

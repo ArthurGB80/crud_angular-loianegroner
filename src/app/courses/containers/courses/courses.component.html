@@ -2,13 +2,13 @@
   <mat-toolbar color="primary">Cursos Disponíveis</mat-toolbar>
 
   <div class="example-container mat-elevation-z8">
-    <app-courses-list
+    <app-course-list
       *ngIf="courses$ | async as courses; else loading"
       [courses]="courses"
       (add)="onAdd()"
       (edit)="onEdit($event)"
       (remove)="onRemove($event)"
-    ></app-courses-list>
+    ></app-course-list>
 
     <ng-template #loading>
       <div class="loading-spinner">
